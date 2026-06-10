@@ -136,7 +136,31 @@ http://localhost:5000
 - Error Handling Middleware
 
 ---
+
+## 🚧 Project Status
+
+This project is currently under development and active improvements are being made.
+
+### Upcoming Features
+
+- User Login & Logout
+- Forgot Password & Reset Password
+- Food Menu Management
+- Cart Functionality
+- Order Management
+- Payment Gateway Integration
+- Admin Dashboard
+- Product Reviews & Ratings
+
+> ⚠️ This project is still a work in progress. New features and improvements are being added regularly.
+
 ---
+
+## 👩‍💻 Author
+
+**Tamanna Baghel**
+
+GitHub: https://github.com/Tannu234
 
 
 ---
