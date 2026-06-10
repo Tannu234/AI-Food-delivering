@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
+
 // create schema
 const userSchema = new mongoose.Schema({
     name: {
@@ -45,4 +46,51 @@ const userSchema = new mongoose.Schema({
         enum: ['users', 'admin'],
         default: 'users'
     },
-});
+    avatar: {
+        public_id: String,
+        url: String,
+        },
+        passwordChangeAt: Date,
+        passwordResetToken: String,
+        passwordResetExpire: Date
+},
+{timestamps: true}
+);
+
+//hash password 
+//pre save=>runs before data is saved
+userSchema.pre('save', async function() {
+    if(!this.isModified('password')) return;
+    this.password = await bcrypt.hash(this.password, 12);
+    this.passwordConfirm = undefined;
+    });
+    //pass Comapare
+
+userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+
+}
+
+//c check whether the user pass was changed after the token
+//if yes , the old token will be invalid and user must log in again
+
+userSchema.methods.changePasswordAfter = function(JWTTimestamp) {
+    if(this.passwordChangeAt) {
+        const changedTimestamp = parseInt(this.passwordChangeAt.getTime() / 1000, 10);
+        return JWTTimestamp < changedTimestamp;
+}
+    return false;
+}
+
+// custom method to generate token 
+
+userSchema.methods.getJWTToken = function() {
+    return jwt.sign({id: this._id}, 
+    process.env.JWT_SECRET,
+    {
+        expiresIn: process.env.JWT_EXPIRE}
+
+    )
+}
+module .exports = mongoose.model('User', userSchema);
+
