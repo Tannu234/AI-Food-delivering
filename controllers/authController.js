@@ -2,8 +2,8 @@
 const User = require('../models/User');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
-const sendToken = require('../utils/jwtToken');
-const cloudinary = require('../cloudinary');
+const sendToken = require('../utils/sendToken');
+const cloudinary = require('../config/cloudinary');
 
 //singup
 exports.signup = catchAsyncErrors(async (req, res, next) =>{
