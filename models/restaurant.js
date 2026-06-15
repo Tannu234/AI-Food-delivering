@@ -1,0 +1,50 @@
+const mongoose = require('mongoose');
+
+const restaurantSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true,"Restaurant name is required"],
+        trim: true,
+        maxLength: [100, "Restaurant name cannot exceed 100 characters"]
+    },
+    isVeg: {
+        type: Boolean,
+        default: false
+    },
+    address: {
+        type: String,
+        required: [true,"Restaurant address is required"],
+    },
+    ratings: {
+        type: Number,
+        default: 0
+    },
+    numberOfReviews: {
+        type: Number,
+        default: 0
+    },
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
+    reviews: [
+        {
+            name: {
+                type: String,
+                required: true
+            },
+            ratings: {
+                type: Number,
+                required: true
+            },
+
+        }
+    ]
+})
