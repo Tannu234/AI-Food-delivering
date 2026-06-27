@@ -44,7 +44,33 @@ const restaurantSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-
+            comment: {
+                type: String,
+                required: true
+            }
         }
-    ]
+    ],
+    images: [
+        {
+            public_id: {
+                type: String,
+                required: true
+            },
+            url: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
 })
+
+restaurantSchema.index({ location: '2dsphere' });
+restaurantSchema.index({address: 'text'});
+
+module.exports = mongoose.model('Restaurant', restaurantSchema);
+
