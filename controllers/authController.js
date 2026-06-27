@@ -66,4 +66,5 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
     }
     sendToken(user, 200, res);
     
+    const isMatch = await user.comparePassword(req.body.password);
 });
