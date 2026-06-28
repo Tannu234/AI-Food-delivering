@@ -17,3 +17,16 @@ exports.getAllRestaurants = catchAsyncErrors(async (req, res, next) => {
         restaurant: restaurants
     })
 })
+
+//get retaurants by its id
+exports.getRestaurant = catchAsyncErrors(async (req, res, next) => {
+    const restaurant = await Restaurant.findById(req.params.storedId);
+    if (!restaurant) 
+        return next(new ErrorHandler('Restaurant not found', 404));
+
+    res.status(200).json({
+        success: true,
+        data: restaurant
+    });
+});
+
