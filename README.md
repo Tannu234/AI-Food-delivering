@@ -163,16 +163,3 @@ This project is currently under development and active improvements are being ma
 GitHub: https://github.com/Tannu234
 
 
----
-
-## 👩‍💻 Author
-
-**Tamanna Baghel**
-
-GitHub: https://github.com/Tannu234
-
-## 👩‍💻 Author
-
-**Tamanna Baghel**
-
-GitHub: https://github.com/Tannu234
