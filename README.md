@@ -72,11 +72,9 @@ backend/
 ## ⚙️ Installation
 
 Clone the repository:
-
 ```bash
-git clone https://github.com/your-username/food-delivery-app.git
-```
-
+https://github.com/Tannu234/AI-Food-delivering
+....
 Move into project directory:
 
 ```bash
