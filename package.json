@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "orderit",
   "version": "1.0.0",
   "description": "Food Ordering Website using MERN Stack.This website is created for particular restaurant i.e Zyka.",
@@ -35,5 +36,33 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
+=======
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.17.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "cors": "^2.8.6",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "html-to-text": "^10.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.3",
+    "nodemailer": "^8.0.10",
+    "react-router-dom": "^7.17.0",
+    "stripe": "^22.3.0",
+    "validator": "^13.15.35"
+>>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
   }
 }

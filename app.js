@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+<<<<<<< HEAD
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -74,3 +75,16 @@ app.all("*", (req, res, next) => {
 app.use(errorMiddleware);
 
 module.exports = app;
+=======
+const authRoutes = require("./routes/auth");
+const restaurant = require("./routes/restaurant");
+
+
+console.log("authRoutes:", authRoutes);
+
+app.use(express.json());
+
+app.use("/api/v1/auth", authRoutes);  // ✅ auth
+app.use("/api/v1/eats/stores", restaurant)
+module.exports = app;
+>>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
