@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 
 // We are creating an **`Email` utility class** to send emails to users.
 
@@ -40,14 +39,14 @@
 
 
 
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
+
 const nodemailer = require("nodemailer");
 const pug = require("pug");
 const htmlToText = require("html-to-text");
 
 module.exports = class Email {
   constructor(user, url) {
-    // console.log(user);
+    console.log(user);
     console.log(process.env.EMAIL_HOST);
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
@@ -56,9 +55,9 @@ module.exports = class Email {
   }
 
   newTransport() {
-    // if (process.env.NODE_ENV === "production") {
-    //   return 1;
-    // }
+     if (process.env.NODE_ENV === "production") {
+       return 1;
+     }
 
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
