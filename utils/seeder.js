@@ -1,7 +1,5 @@
 // BACKEND/utils/seeder.js
 
-<<<<<<< HEAD
-=======
 
 // We are creating a Seeder Script.
 // To quickly populate the database with **sample/default data** without manually adding records one by one.
@@ -32,7 +30,6 @@
 // Yes. Since `deleteMany()` is used, all existing records in that collection will be removed before inserting new data. That's why seeder scripts are usually used only in **development environments**, not in production.
 
 
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
 const Fooditem = require("../models/foodItem");
 const dotenv = require("dotenv");
 const connectDatabase = require("../config/database");

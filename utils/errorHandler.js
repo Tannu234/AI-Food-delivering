@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 // Short Conclusion for Students
 
 // We are creating a **custom error class** called `ErrorHandler`.
@@ -33,7 +32,6 @@
 
 // >Think of it as a complaint form that contains both the problem description and its severity level, so the support team knows exactly how to respond.
 
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
 class ErrorHandler extends Error {
   constructor(message, statusCode) {
     super(message);
@@ -43,8 +41,4 @@ class ErrorHandler extends Error {
   }
 }
 
-<<<<<<< HEAD
 module.exports = ErrorHandler;
-=======
-         module.exports = ErrorHandler;
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
