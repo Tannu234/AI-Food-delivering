@@ -1,99 +1,168 @@
-<<<<<<< HEAD
 const Restaurant = require("../models/restaurant");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsync = require("../middlewares/catchAsyncErrors");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const APIFeatures = require("../utils/apiFeatures");
 
-exports.getAllRestaurants = catchAsync(async (req, res, next) => {
-  const apiFeatures = new APIFeatures(Restaurant.find(), req.query)
-    .search()
-    .sort();
-  const restaurants = await apiFeatures.query;
-  res.status(200).json({
-    status: "success",
-    count: restaurants.length,
-    restaurants: restaurants,
-  });
-});
-
-exports.createRestaurant = catchAsync(async (req, res, next) => {
-=======
-const User = require('../models/User');
-const ErrorHandler = require('../utils/errorHandler');
-const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
-const APIFeatures = require('../utils/apiFeatures')
-const Restaurant = require('../models/restaurant');
-
-//get all restaurants
+// Get all restaurants
 exports.getAllRestaurants = catchAsyncErrors(async (req, res, next) => {
     const apiFeatures = new APIFeatures(Restaurant.find(), req.query)
-        .search().sort();
-    
+        .search()
+        .sort();
+
     const restaurants = await apiFeatures.query;
 
     res.status(200).json({
         success: true,
         count: restaurants.length,
-        restaurant: restaurants
-    })
-})
-
-//get retaurants by its id
-exports.getRestaurant = catchAsyncErrors(async (req, res, next) => {
-    const restaurant = await Restaurant.findById(req.params.storedId); 
-    if (!restaurant) 
-        return next(new ErrorHandler('Restaurant not found', 404));
-
-    res.status(200).json({
-        success: true,
-        data: restaurant
+        restaurants: restaurants,
     });
 });
 
-//update
-
+// Create restaurant
 exports.createRestaurant = catchAsyncErrors(async (req, res, next) => {
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
-  const restaurant = await Restaurant.create(req.body);
-  res.status(201).json({
-    status: "success",
-    data: restaurant,
-  });
+    const restaurant = await Restaurant.create(req.body);
+
+    res.status(201).json({
+        success: true,
+        data: restaurant,
+    });
 });
 
-<<<<<<< HEAD
-//Get restaurant by id
-exports.getRestaurant = catchAsync(async (req, res, next) => {
-  const restaurant = await Restaurant.findById(req.params.storeId);
+// Get restaurant by ID
+exports.getRestaurant = catchAsyncErrors(async (req, res, next) => {
+    const restaurant = await Restaurant.findById(req.params.storeId);
 
-  if (!restaurant)
-    return next(new ErrorHandler("No Restaurant found with that ID", 404));
+    if (!restaurant) {
+        return next(new ErrorHandler("Restaurant not found", 404));
+    }
 
-  res.status(200).json({
-=======
-//update
-
-exports.createRestaurant = catchAsyncErrors(async (req, res, next) => {
-  const restaurant = await Restaurant.create(req.body);
-  res.status(201).json({
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
-    status: "success",
-    data: restaurant,
-  });
+    res.status(200).json({
+        success: true,
+        data: restaurant,
+    });
 });
-<<<<<<< HEAD
 
-exports.deleteRestaurant = catchAsync(async (req, res, next) => {
-=======
-//update......
+// Delete restaurant
 exports.deleteRestaurant = catchAsyncErrors(async (req, res, next) => {
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
-  const restaurant = await Restaurant.findByIdAndDelete(req.params.storeId);
+    const restaurant = await Restaurant.findByIdAndDelete(req.params.storeId);
 
-  if (!restaurant)
-    return next(new ErrorHandler("No document found with that ID", 404));
+    if (!restaurant) {
+        return next(new ErrorHandler("Restaurant not found", 404));
+    }
 
-  res.status(204).json({
-    status: "success",
-  });
+    res.status(200).json({
+        success: true,
+        message: "Restaurant deleted successfully",
+    });
+});
+
+// Create or update a review — logged-in user only, one review per user per restaurant
+exports.createOrUpdateReview = catchAsyncErrors(async (req, res, next) => {
+    const { rating, comment } = req.body;
+
+    if (!rating || !comment) {
+        return next(new ErrorHandler("Please provide a rating and a comment", 400));
+    }
+
+    const restaurant = await Restaurant.findById(req.params.storeId);
+
+    if (!restaurant) {
+        return next(new ErrorHandler("Restaurant not found", 404));
+    }
+
+    const review = {
+        user: req.user._id,
+        name: req.user.name,
+        rating: Number(rating),
+        Comment: comment,
+        createdAt: Date.now(),
+    };
+
+    const existingReview = restaurant.reviews.find(
+        (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (existingReview) {
+        existingReview.rating = review.rating;
+        existingReview.Comment = review.Comment;
+        existingReview.createdAt = review.createdAt;
+    } else {
+        restaurant.reviews.push(review);
+    }
+
+    restaurant.numOfReviews = restaurant.reviews.length;
+    restaurant.ratings =
+        restaurant.reviews.reduce((acc, r) => acc + r.rating, 0) /
+        restaurant.reviews.length;
+
+    await restaurant.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+        success: true,
+        message: existingReview ? "Review updated" : "Review submitted",
+        reviews: restaurant.reviews,
+        ratings: restaurant.ratings,
+        numOfReviews: restaurant.numOfReviews,
+    });
+});
+
+// Get all reviews for a restaurant
+exports.getReviews = catchAsyncErrors(async (req, res, next) => {
+    const restaurant = await Restaurant.findById(req.params.storeId);
+
+    if (!restaurant) {
+        return next(new ErrorHandler("Restaurant not found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        reviews: restaurant.reviews,
+        ratings: restaurant.ratings,
+        numOfReviews: restaurant.numOfReviews,
+    });
+});
+
+// Delete own review (or admin can delete any)
+exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
+    const restaurant = await Restaurant.findById(req.params.storeId);
+
+    if (!restaurant) {
+        return next(new ErrorHandler("Restaurant not found", 404));
+    }
+
+    const review = restaurant.reviews.find(
+        (r) => r._id.toString() === req.params.reviewId
+    );
+
+    if (!review) {
+        return next(new ErrorHandler("Review not found", 404));
+    }
+
+    if (
+        review.user.toString() !== req.user._id.toString() &&
+        req.user.role !== "admin"
+    ) {
+        return next(new ErrorHandler("Not authorized to delete this review", 403));
+    }
+
+    restaurant.reviews = restaurant.reviews.filter(
+        (r) => r._id.toString() !== req.params.reviewId
+    );
+
+    restaurant.numOfReviews = restaurant.reviews.length;
+    restaurant.ratings =
+        restaurant.reviews.length > 0
+            ? restaurant.reviews.reduce((acc, r) => acc + r.rating, 0) /
+              restaurant.reviews.length
+            : 0;
+
+    await restaurant.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+        success: true,
+        message: "Review deleted",
+        reviews: restaurant.reviews,
+        ratings: restaurant.ratings,
+        numOfReviews: restaurant.numOfReviews,
+    });
 });
