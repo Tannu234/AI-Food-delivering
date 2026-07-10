@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const mongoose = require("mongoose");
 
 const restaurantSchema = new mongoose.Schema({
@@ -37,6 +36,11 @@ const restaurantSchema = new mongoose.Schema({
   },
   reviews: [
     {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
       name: {
         type: String,
         required: true,
@@ -44,23 +48,30 @@ const restaurantSchema = new mongoose.Schema({
       rating: {
         type: Number,
         required: true,
+        min: 1,
+        max: 5,
       },
       Comment: {
         type: String,
         required: true,
+        maxLength: [500, "Review cannot exceed 500 characters"],
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
       },
     },
   ],
 
   //ai
-  reviewSentiment:{
-    type:String,
-    enum:["positive", "negative", "mixed"]
-   },
+  reviewSentiment: {
+    type: String,
+    enum: ["positive", "negative", "mixed"],
+  },
 
-  reviewSummaryBullets:[String],
+  reviewSummaryBullets: [String],
 
-  reviewTopMentions:[String],
+  reviewTopMentions: [String],
 
   //images are array of an object and each object contains two things, 1. id of that img and 2. url of that img.
   images: [
@@ -75,9 +86,7 @@ const restaurantSchema = new mongoose.Schema({
       },
     },
   ],
-   
 
-   
   createdAt: {
     type: Date,
     default: Date.now,
@@ -88,81 +97,3 @@ restaurantSchema.index({ location: "2dsphere" });
 restaurantSchema.index({ address: "text" });
 
 module.exports = mongoose.model("Restaurant", restaurantSchema);
-=======
-const mongoose = require('mongoose');
-
-const restaurantSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true,"Restaurant name is required"],
-        trim: true,
-        maxLength: [100, "Restaurant name cannot exceed 100 characters"]
-    },
-    isVeg: {
-        type: Boolean,
-        default: false
-    },
-    address: {
-        type: String,
-        required: [true,"Restaurant address is required"],
-    },
-    ratings: {
-        type: Number,
-        default: 0
-    },
-    numberOfReviews: {
-        type: Number,
-        default: 0
-    },
-    location: {
-        type: {
-            type: String,
-            enum: ['Point'],
-            required: true
-        },
-        coordinates: {
-            type: [Number],
-            required: true
-        }
-    },
-    reviews: [
-        {
-            name: {
-                type: String,
-                required: true
-            },
-            ratings: {
-                type: Number,
-                required: true
-            },
-            comment: {
-                type: String,
-                required: true
-            }
-        }
-    ],
-    images: [
-        {
-            public_id: {
-                type: String,
-                required: true
-            },
-            url: {
-                type: String,
-                required: true
-            }
-        }
-    ],
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-
-})
-
-restaurantSchema.index({ location: '2dsphere' });
-restaurantSchema.index({address: "text"});
-
-module.exports = mongoose.model('Restaurant', restaurantSchema);
-
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
