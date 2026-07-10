@@ -3,14 +3,14 @@ const router = express.Router();
 const aiController = require("../controllers/ai.controller");
 
 
-// router.post("/generate-food-ai", aiController.generateFoodAI);
+ router.post("/generate-food-ai", aiController.generateFoodAI);
 router.get("/test", (req, res) => {
   res.send("AI route working");
 });
-// router.post(
-//   "/generate-food-ai/:foodId",
-//   aiController.generateAndSaveFoodAI
-// );
+router.post(
+   "/generate-food-ai/:foodId",
+   aiController.generateAndSaveFoodAI
+ );
 
 // GENERATE ONLY
 router.post("/generate-food-ai", aiController.generateFoodAI);
@@ -27,9 +27,9 @@ router.put("/admin/restaurants/:id/analyze", aiController.analyzeRestaurantRevie
 
 
 
-// const restaurantController = require(
-//   "../controllers/restaurant.controller"
-// );
+ //const restaurantController = require(
+   //"../controllers/restaurant.controller"
+ //);
 
 router.put(
   "/stores/:id/review",
