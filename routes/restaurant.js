@@ -6,6 +6,9 @@ const {
   createRestaurant,
   getRestaurant,
   deleteRestaurant,
+  createOrUpdateReview,
+  getReviews,
+  deleteReview,
 } = require("../controllers/restaurantController");
 
 const { protect } = require("../controllers/authController");
@@ -22,6 +25,14 @@ router
   .route("/:storeId")
   .get(getRestaurant)
   .delete(protect, authorizeRoles("admin"), deleteRestaurant);
+
+// Reviews
+router
+  .route("/:storeId/reviews")
+  .get(getReviews)
+  .put(protect, createOrUpdateReview);
+
+router.route("/:storeId/reviews/:reviewId").delete(protect, deleteReview);
 
 router.use("/:storeId/menus", menuRoutes);
 
