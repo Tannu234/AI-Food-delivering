@@ -12,7 +12,7 @@ exports.createCoupon = catchAsync(async (req, res, next) => {
 
 exports.getCoupon = catchAsync(async (req, res, next) => {
   const coupons = await Coupon.find();
-  // if(!coupons) return next(new ErrorHandler(''))
+   if(!coupons) return next(new ErrorHandler(''))
   res.status(200).json({
     status: "success",
     data: coupons,
@@ -52,7 +52,7 @@ exports.couponValidate = catchAsync(async (req, res, next) => {
       $addFields: {
         finalTotal: {
           $cond: [
-            // if cartItemsTotalAmount >= minAmount
+             // if cartItemsTotalAmount >= minAmount
             { $gte: [cartItemsTotalAmount, "$minAmount"] },
             // If condition is true, apply discount
             {
