@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const app = require("./app");
 const connectDatabase = require("./config/database");
 
@@ -41,18 +40,3 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
-=======
-const dotenv = require('dotenv');
-dotenv.config({ path: './config/config.env' });
-
-const app = require('./app');
-const connectDatabase = require('./config/database');
-
-connectDatabase();
-
-const PORT = process.env.PORT || 8000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
