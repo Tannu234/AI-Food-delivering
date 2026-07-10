@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 
 // We are creating an **error-handling wrapper function** for asynchronous functions.
 
@@ -23,6 +22,5 @@
 // error handler automatically, reducing repetitive `try...catch` code.
 
 
->>>>>>> 10383afece3d9e043e08a3473b80fb0d32bd2897
 module.exports = (func) => (req, res, next) =>
   Promise.resolve(func(req, res, next)).catch(next);
