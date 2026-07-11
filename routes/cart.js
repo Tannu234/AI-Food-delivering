@@ -6,6 +6,7 @@ const cartController = require("../controllers/cartController");
 // Add to cart
 router.post("/add-to-cart", cartController.addItemToCart);
 
+
 // Update cart item quantity
 router.post("/update-cart-item", cartController.updateCartItemQuantity);
 router.delete("/delete-cart-item", cartController.deleteCartItem);
