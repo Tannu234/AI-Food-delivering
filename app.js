@@ -15,7 +15,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://aifoodeliveryapp.netlify.app", // production frontend
+      "https://aifooddeliveringapp123.netlify.app", // production frontend
     ],
     credentials: true,
   }),
