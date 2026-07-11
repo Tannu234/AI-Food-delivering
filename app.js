@@ -13,10 +13,20 @@ const errorMiddleware = require("./middlewares/errors");
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://aifooddeliveringapp123.netlify.app", // production frontend
-    ],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like Postman, curl, server-to-server)
+      if (!origin) return callback(null, true);
+
+      const allowed =
+        origin === "http://localhost:5173" ||
+        /\.netlify\.app$/.test(new URL(origin).hostname);
+
+      if (allowed) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS: " + origin));
+      }
+    },
     credentials: true,
   }),
 );
