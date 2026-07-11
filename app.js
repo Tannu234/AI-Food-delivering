@@ -11,25 +11,15 @@ const aiRoutes = require("./routes/ai.routes");
 
 const errorMiddleware = require("./middlewares/errors");
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  "http://localhost:5173",
-  "http://localhost:5174",
-];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: [
+      "http://localhost:5173",
+      "https://aifoodeliveryapp.netlify.app", // production frontend
+    ],
     credentials: true,
   }),
 );
-
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -41,10 +31,13 @@ app.use(fileUpload());
 //   api_key: process.env.CLOUDINARY_API_KEY,
 //   api_secret: process.env.CLOUDINARY_API_SECRET,
 // });
-app.use("/proxy", (req, res) => {
-  var url = "https://checkout.stripe.com" + req.url;
-  req.pipe(request(url)).pipe(res);
-});
+// NOTE: this route was broken - 'request' package was never imported,
+// so hitting /proxy would crash with a ReferenceError. Disabled until
+// properly implemented (e.g. using axios or node-fetch instead).
+// app.use("/proxy", (req, res) => {
+//   var url = "https://checkout.stripe.com" + req.url;
+//   req.pipe(request(url)).pipe(res);
+// });
 
 //Import all routes
 const foodRouter = require("./routes/foodItem");
