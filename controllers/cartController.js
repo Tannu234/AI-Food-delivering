@@ -6,17 +6,21 @@ async function addItemToCart(req, res) {
   const { userId, foodItemId, restaurantId, quantity } = req.body;
 
   try {
-    const foodItem = await FoodItem.findById(foodItemId);
+    // Run independent existence checks in parallel instead of one after another
+    const [foodItem, restaurant, existingCart] = await Promise.all([
+      FoodItem.findById(foodItemId),
+      Restaurant.findById(restaurantId),
+      Cart.findOne({ user: userId }),
+    ]);
+
     if (!foodItem) {
       return res.status(404).json({ message: "Food item not found" });
     }
-
-    const restaurant = await Restaurant.findById(restaurantId);
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found" });
     }
 
-    let cart = await Cart.findOne({ user: userId });
+    let cart = existingCart;
 
     if (cart) {
       if (cart.restaurant.toString() !== restaurantId) {
@@ -46,18 +50,14 @@ async function addItemToCart(req, res) {
 
     await cart.save();
 
-    // Fetch and return the populated cart
-    const updatedCart = await Cart.findOne({ user: userId })
-      .populate({
-        path: "items.foodItem",
-        select: "name price images",
-      })
-      .populate({
-        path: "restaurant",
-        select: "name",
-      });
+    // Populate the SAME cart document we already have in memory —
+    // no need to hit the database again with another findOne().
+    await cart.populate([
+      { path: "items.foodItem", select: "name price images" },
+      { path: "restaurant", select: "name" },
+    ]);
 
-    res.status(200).json({ message: "Cart updated", cart: updatedCart });
+    res.status(200).json({ message: "Cart updated", cart });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -84,20 +84,14 @@ async function updateCartItemQuantity(req, res) {
     cart.items[itemIndex].quantity = quantity;
     await cart.save();
 
-    // Fetch and return the populated cart
-    const updatedCart = await Cart.findOne({ user: userId })
-      .populate({
-        path: "items.foodItem",
-        select: "name price images",
-      })
-      .populate({
-        path: "restaurant",
-        select: "name",
-      });
+    await cart.populate([
+      { path: "items.foodItem", select: "name price images" },
+      { path: "restaurant", select: "name" },
+    ]);
 
     res
       .status(200)
-      .json({ message: "Cart item quantity updated", cart: updatedCart });
+      .json({ message: "Cart item quantity updated", cart });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -129,18 +123,12 @@ async function deleteCartItem(req, res) {
     } else {
       await cart.save();
 
-      // Fetch and return the populated cart
-      const updatedCart = await Cart.findOne({ user: userId })
-        .populate({
-          path: "items.foodItem",
-          select: "name price images",
-        })
-        .populate({
-          path: "restaurant",
-          select: "name",
-        });
+      await cart.populate([
+        { path: "items.foodItem", select: "name price images" },
+        { path: "restaurant", select: "name" },
+      ]);
 
-      res.status(200).json({ message: "Cart item deleted", cart: updatedCart });
+      res.status(200).json({ message: "Cart item deleted", cart });
     }
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
